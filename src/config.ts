@@ -41,3 +41,5 @@ export const getConfig = async () => {
     dataStreamName: environment.DATA_STREAM_NAME,
   } as const;
 };
+
+export type Config = Awaited<ReturnType<typeof getConfig>>;

@@ -9,6 +9,11 @@
     "test": "jest",
     "prepare": "husky install"
   },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.231.0",
+    "@elastic/elasticsearch": "^8.5.0",
+    "zod": "^3.20.2"
+  },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.1",
     "@types/aws-lambda": "^8.10.109",
@@ -23,10 +28,5 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
-  },
-  "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.231.0",
-    "@elastic/elasticsearch": "^8.5.0",
-    "zod": "^3.20.2"
   }
 }
