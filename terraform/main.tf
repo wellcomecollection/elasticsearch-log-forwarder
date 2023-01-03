@@ -1,0 +1,45 @@
+module "log_forwarder" {
+  source = "git@github.com:wellcomecollection/terraform-aws-lambda.git?ref=v1.1.0"
+
+  name        = "elasticsearch-log-forwarder"
+  description = "Takes logs from a Kinesis stream, puts them in ES"
+
+  filename         = "../package.zip"
+  source_code_hash = filebase64sha256("../package.zip")
+  handler          = "lambda.handler"
+
+  timeout                 = 15 * 60 // 15 minutes
+  memory_size             = 512
+  runtime                 = "nodejs18.x"
+  forward_logs_to_elastic = false // Prevent loops
+
+  vpc_config = {
+    subnet_ids         = local.developer_vpc_private_subnets
+    security_group_ids = [local.ec_privatelink_sg_id]
+  }
+
+  environment = {
+    variables = {
+      ELASTICSEARCH_URL_SECRET     = data.aws_secretsmanager_secret.logging_private_host.arn
+      ELASTICSEARCH_API_KEY_SECRET = data.aws_secretsmanager_secret.api_key.arn
+      DATA_STREAM_NAME             = local.data_stream_name
+    }
+  }
+}
+
+resource "aws_lambda_event_source_mapping" "kinesis" {
+  event_source_arn = local.kinesis_stream_arn
+  function_name    = module.log_forwarder.lambda.arn
+
+  starting_position                  = "TRIM_HORIZON" // ie oldest logs first
+  batch_size                         = 10
+  maximum_batching_window_in_seconds = 30
+}
+
+data "aws_secretsmanager_secret" "logging_private_host" {
+  name = "elasticsearch/logging/private_host"
+}
+
+data "aws_secretsmanager_secret" "api_key" {
+  name = "elasticsearch/logging/forwarder/api_key"
+}
