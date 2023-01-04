@@ -9,7 +9,7 @@ describe("transform", () => {
     expect(document.log).toBe("Test message");
     expect(document.service).toBe("test-service");
     expect(document["@timestamp"]).toBe(event.timestamp);
-    expect(document._id).toBe(event.id);
+    expect(document.id).toBe(event.id);
   });
 
   it("correctly decodes data that is compressed and base64-encoded", async () => {

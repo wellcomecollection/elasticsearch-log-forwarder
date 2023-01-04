@@ -6,7 +6,7 @@ import { CloudwatchLogEvent, LogDocument } from "./types";
 export const logEventToLogDocument =
   (service: string) =>
   (event: CloudwatchLogEvent): LogDocument => ({
-    _id: event.id,
+    id: event.id,
     "@timestamp": event.timestamp,
     log: event.message,
     service,

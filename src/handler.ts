@@ -29,7 +29,9 @@ export const createHandler =
     let failures: OnDropDocument<LogDocument>[] = [];
     await elasticClient.helpers.bulk<LogDocument>({
       datasource: documents,
-      onDocument: () => ({ create: { _index: config.dataStreamName } }),
+      onDocument: (doc) => ({
+        create: { _index: config.dataStreamName, _id: doc.id },
+      }),
       onDrop: (fail) => {
         failures.push(fail);
       },
