@@ -6,4 +6,5 @@ locals {
   kinesis_stream_arn            = local.shared_infra["elasticsearch_log_forwarder_kinesis_arn"]
   ec_privatelink_sg_id          = local.shared_infra["ec_platform_privatelink_sg_id"]
   developer_vpc_private_subnets = local.catalogue_vpcs["catalogue_vpc_delta_private_subnets"]
+  vpc_id                        = local.catalogue_vpcs["catalogue_vpc_delta_id"]
 }

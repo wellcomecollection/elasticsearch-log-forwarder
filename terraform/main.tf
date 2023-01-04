@@ -15,7 +15,7 @@ module "log_forwarder" {
 
   vpc_config = {
     subnet_ids         = local.developer_vpc_private_subnets
-    security_group_ids = [local.ec_privatelink_sg_id]
+    security_group_ids = [local.ec_privatelink_sg_id, aws_security_group.allow_egress.id]
   }
 
   environment = {
@@ -42,4 +42,18 @@ data "aws_secretsmanager_secret" "logging_private_host" {
 
 data "aws_secretsmanager_secret" "api_key" {
   name = "elasticsearch/logging/forwarder/api_key"
+}
+
+resource "aws_security_group" "allow_egress" {
+  name        = "log-forwarder-allow-egress"
+  description = "Allow all outbound traffic"
+  vpc_id      = local.vpc_id
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
 }
