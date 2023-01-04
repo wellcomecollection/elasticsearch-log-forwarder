@@ -1,5 +1,6 @@
 import { KinesisStreamEvent } from "aws-lambda";
 import { Client as ElasticClient } from "@elastic/elasticsearch";
+import { OnDropDocument } from "@elastic/elasticsearch/lib/helpers";
 import { CloudwatchKinesisMessage, LogDocument } from "./types";
 import { Config } from "./config";
 import { decodeBase64Gzipped, logEventToLogDocument } from "./transform";
@@ -25,11 +26,24 @@ export const createHandler =
     const config = await configPromise;
     const elasticClient = await elasticClientPromise;
 
+    let failures: OnDropDocument<LogDocument>[] = [];
     await elasticClient.helpers.bulk<LogDocument>({
       datasource: documents,
-      onDocument: () => ({ index: { _index: config.dataStreamName } }),
+      onDocument: () => ({ create: { _index: config.dataStreamName } }),
       onDrop: (fail) => {
-        console.warn("Failed to ingest document: ", fail);
+        failures.push(fail);
       },
     });
+
+    if (failures.length !== 0) {
+      const failedServices = new Set(
+        failures.map(({ document }) => document.service)
+      );
+      console.error(
+        `Failed to ingest documents from ${failedServices.size} services: ${[
+          ...failedServices,
+        ].join(", ")}`
+      );
+      throw new Error(JSON.stringify(failures));
+    }
   };
