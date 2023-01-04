@@ -1,0 +1,24 @@
+steps:
+  - label: "autoformat"
+    plugins:
+      - docker-compose#v4.9.0:
+          run: tooling
+          command: [".buildkite/scripts/autoformat.sh"]
+
+  - label: "test"
+    plugins:
+      - docker-compose#v4.9.0:
+          run: tooling
+          command: ["yarn test"]
+
+  - block: "Package and deploy :rocket:"
+
+  - label: "deploy"
+    plugins:
+      - docker-compose#v4.9.0:
+          run: tooling
+          command: [".buildkite/scripts/deploy.sh"]
+          env:
+            - AWS_ACCESS_KEY_ID
+            - AWS_SECRET_ACCESS_KEY
+            - AWS_SESSION_TOKEN

@@ -4,8 +4,9 @@ module "log_forwarder" {
   name        = "elasticsearch-log-forwarder"
   description = "Takes logs from a Kinesis stream, puts them in ES"
 
-  filename         = "../package.zip"
-  source_code_hash = filebase64sha256("../package.zip")
+  s3_bucket = aws_s3_object.log_forwarder_package.bucket
+  s3_key = aws_s3_object.log_forwarder_package.key
+  s3_object_version = aws_s3_object.log_forwarder_package.version_id
   handler          = "lambda.handler"
 
   timeout                 = 15 * 60 // 15 minutes
@@ -24,6 +25,16 @@ module "log_forwarder" {
       ELASTICSEARCH_API_KEY_SECRET = data.aws_secretsmanager_secret.api_key.arn
       DATA_STREAM_NAME             = local.data_stream_name
     }
+  }
+}
+
+resource "aws_s3_object" "log_forwarder_package" {
+  bucket = "wellcomecollection-platform-infra"
+  key    = "lambdas/elasticsearch-log-forwarder/package.zip"
+  content = "empty"
+
+  lifecycle {
+    ignore_changes = [content]
   }
 }
 
