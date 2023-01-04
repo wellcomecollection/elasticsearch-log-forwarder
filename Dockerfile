@@ -5,7 +5,7 @@ ARG TERRAFORM_VERSION=1.3.6
 RUN wget -O /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   unzip -q -o /tmp/terraform.zip -d /usr/local/bin
 
-RUN apt update && apt install git awscli
+RUN apt update && apt install -y git
 
 WORKDIR /app
 

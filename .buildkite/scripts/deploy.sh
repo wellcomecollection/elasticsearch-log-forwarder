@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+TERRAFORM_ROLE="arn:aws:iam::760097843905:role/platform-ci"
+
+# Do this here rather than in Dockerfile so we don't install it on every build/test
+apt install -y awscli zip
 ROOT=$(git rev-parse --show-toplevel)
-S3_BUCKET=$(cd $ROOT/terraform && terraform output s3_bucket)
-S3_KEY=$(cd $ROOT/terraform && terraform output s3_key)
-FUNCTION_NAME=$(cd $ROOT/terraform && terraform output function_name)
+
+cd $ROOT/terraform
+terraform init -backend-config="role_arn=${TERRAFORM_ROLE}"
+S3_BUCKET=$(terraform output -raw s3_bucket)
+S3_KEY=$(terraform output -raw s3_key)
+FUNCTION_NAME=$(terraform output -raw function_name)
+cd $ROOT
 
 yarn package
 aws s3 cp $ROOT/package.zip "s3://${S3_BUCKET}/${S3_KEY}"
