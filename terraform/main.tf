@@ -20,7 +20,7 @@ module "log_forwarder" {
 
   environment = {
     variables = {
-      ELASTICSEARCH_URL_SECRET     = data.aws_secretsmanager_secret.logging_private_host.arn
+      ELASTICSEARCH_HOST_SECRET    = data.aws_secretsmanager_secret.logging_private_host.arn
       ELASTICSEARCH_API_KEY_SECRET = data.aws_secretsmanager_secret.api_key.arn
       DATA_STREAM_NAME             = local.data_stream_name
     }
@@ -33,7 +33,7 @@ resource "aws_lambda_event_source_mapping" "kinesis" {
 
   starting_position                  = "TRIM_HORIZON" // ie oldest logs first
   batch_size                         = 10
-  maximum_batching_window_in_seconds = 30
+  maximum_batching_window_in_seconds = 10
 }
 
 data "aws_secretsmanager_secret" "logging_private_host" {
