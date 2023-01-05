@@ -16,7 +16,7 @@ describe("handler", () => {
     } as unknown as ElasticClient;
     const config = {
       dataStreamName: "test-stream",
-      elasticsearchHost: "https://elastic.test:9243",
+      elasticsearchHost: "elastic.test",
       elasticsearchApiKey: "secret",
     };
     const handler = createHandler(
