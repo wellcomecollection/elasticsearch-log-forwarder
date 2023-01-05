@@ -1,0 +1,29 @@
+name: "Lint, build and test"
+on: [push]
+jobs:
+  lint-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Prettier
+        uses: wearerequired/lint-action@v2
+        with:
+          prettier: true
+
+      - name: Test
+        run: yarn test
+
+      - name: Build
+        run: yarn build
