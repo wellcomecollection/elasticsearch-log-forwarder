@@ -29,12 +29,22 @@ module "log_forwarder" {
 }
 
 resource "aws_s3_object" "log_forwarder_package" {
-  bucket  = "wellcomecollection-platform-infra"
-  key     = "lambdas/elasticsearch-log-forwarder/package.zip"
-  content = "empty"
+  bucket = "wellcomecollection-platform-infra"
+  key    = "lambdas/elasticsearch-log-forwarder/package.zip"
+  source = data.archive_file.placeholder.output_path
 
   lifecycle {
-    ignore_changes = [content]
+    ignore_changes = [source, content]
+  }
+}
+
+data "archive_file" "placeholder" {
+  output_path = "empty-package.zip"
+  type        = "zip"
+
+  source {
+    content  = "// Placeholder"
+    filename = "placeholder.js"
   }
 }
 
