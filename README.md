@@ -15,3 +15,7 @@ The Kinesis trigger is configured in Terraform using remote state from the share
 ## Deployment
 
 Deployment can be triggered in CI by unblocking a pipeline after tests and linting.
+
+## Context
+
+https://github.com/elastic/elastic-serverless-forwarder exists as a much more general version of this application. While it has the advantage of being maintained by Elastic, it doesn't currently support private VPCs and the format of the log documents it writes leaves much to be desired - as the functionality we need is so simple, it was straightforward to write our own, more configurable, application.
