@@ -7,7 +7,7 @@ import { z } from "zod";
 const secretsManager = new SecretsManagerClient({});
 
 const environmentSchema = z.object({
-  ELASTICSEARCH_URL_SECRET: z.string(),
+  ELASTICSEARCH_HOST_SECRET: z.string(),
   ELASTICSEARCH_API_KEY_SECRET: z.string(),
   DATA_STREAM_NAME: z.string(),
 });
@@ -24,19 +24,19 @@ const getSecret = async (arn: string): Promise<string | undefined> => {
 };
 
 export const getConfig = async () => {
-  const elasticsearchUrl = await getSecret(
-    environment.ELASTICSEARCH_URL_SECRET
+  const elasticsearchHost = await getSecret(
+    environment.ELASTICSEARCH_HOST_SECRET
   );
   const elasticsearchApiKey = await getSecret(
     environment.ELASTICSEARCH_API_KEY_SECRET
   );
-  if (!elasticsearchUrl || !elasticsearchApiKey) {
+  if (!elasticsearchHost || !elasticsearchApiKey) {
     throw new Error(
-      "Elasticsearch URL and API key secrets need to be populated!"
+      "Elasticsearch host and API key secrets need to be populated!"
     );
   }
   return {
-    elasticsearchUrl,
+    elasticsearchHost,
     elasticsearchApiKey,
     dataStreamName: environment.DATA_STREAM_NAME,
   } as const;

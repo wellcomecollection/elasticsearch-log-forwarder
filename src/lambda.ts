@@ -4,9 +4,9 @@ import { Client as ElasticClient } from "@elastic/elasticsearch";
 
 const config = getConfig();
 const elasticClient = config.then(
-  ({ elasticsearchUrl, elasticsearchApiKey }) =>
+  ({ elasticsearchHost, elasticsearchApiKey }) =>
     new ElasticClient({
-      node: elasticsearchUrl,
+      node: `https://${elasticsearchHost}:9243`,
       auth: {
         apiKey: elasticsearchApiKey,
       },
