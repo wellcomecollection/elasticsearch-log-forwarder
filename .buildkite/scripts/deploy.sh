@@ -16,7 +16,11 @@ cd $ROOT
 
 yarn package
 aws s3 cp $ROOT/package.zip "s3://${S3_BUCKET}/${S3_KEY}"
-VERSION_ID=$(aws s3api list-object-versions --bucket $S3_BUCKET --prefix $S3_KEY --query 'Versions[?IsLatest].[VersionId]' --output text)
+VERSION_ID=$(aws s3api list-object-versions \
+  --bucket $S3_BUCKET \
+  --prefix $S3_KEY \
+  --query 'Versions[?IsLatest].[VersionId]' \
+  --output text)
 
 aws lambda update-function-code \
   --function-name $FUNCTION_NAME \
