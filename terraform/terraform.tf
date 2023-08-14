@@ -43,7 +43,7 @@ data "terraform_remote_state" "catalogue_account" {
     role_arn = "arn:aws:iam::760097843905:role/platform-read_only"
 
     bucket = "wellcomecollection-platform-infra"
-    key    = "terraform/platform-infrastructure/accounts/catalogue.tfstate"
+    key    = "terraform/aws-account-infrastructure/catalogue.tfstate"
     region = "eu-west-1"
   }
 }
