@@ -1,6 +1,29 @@
 # elasticsearch-log-forwarder
 
-A Lambda to forward logs from a Kinesis stream to our ES logging cluster.
+A Lambda to forward logs from a Kinesis stream to our Elasticsearch logging cluster.
+
+All our Lambda functions send their logs to a shared log group in CloudWatch.
+These logs are forwarded to a Kinesis data stream, and then this Lambda forwads to logs to our shared logging cluster.
+
+```mermaid
+graph LR
+    LF1[Lambda function]
+    LF2[Lambda function]
+    LF3[Lambda function]
+    CW[CloudWatch Logs group]
+    LF1 --> CW
+    LF2 --> CW
+    LF3 --> CW
+    CW --> KDS[Kinesis data stream]
+    KDS --> EF{Elasticsearch<br/>log forwarder}
+    EF --> LC[(logging<br/>cluster)]
+
+    classDef externalNode fill:#e8e8e8,stroke:#8f8f8f
+    class LF1,LF2,LF3,CW,KDS,LC externalNode
+
+    classDef repoNode fill:#c8ecee,stroke:#298187,stroke-width:2px
+    class EF repoNode
+```
 
 ## Configuration
 
