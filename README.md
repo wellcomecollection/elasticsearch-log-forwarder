@@ -3,7 +3,7 @@
 A Lambda to forward logs from a Kinesis stream to our Elasticsearch logging cluster.
 
 All our Lambda functions send their logs to a shared log group in CloudWatch.
-These logs are forwarded to a Kinesis data stream, and then this Lambda forwads to logs to our shared logging cluster.
+These logs are forwarded to a Kinesis data stream, and then this Lambda forwards those logs to our shared logging cluster.
 
 ```mermaid
 graph LR
