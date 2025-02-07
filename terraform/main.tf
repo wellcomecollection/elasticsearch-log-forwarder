@@ -11,7 +11,7 @@ module "log_forwarder" {
 
   timeout                 = 15 * 60 // 15 minutes
   memory_size             = 512
-  runtime                 = "nodejs18.x"
+  runtime                 = "nodejs20.x"
   forward_logs_to_elastic = false // Prevent loops
 
   vpc_config = {
