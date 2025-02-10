@@ -16,6 +16,7 @@ cd $ROOT
 
 yarn package
 aws s3 cp $ROOT/package.zip "s3://${S3_BUCKET}/${S3_KEY}"
+
 VERSION_ID=$(aws s3api list-object-versions \
   --bucket $S3_BUCKET \
   --prefix $S3_KEY \
@@ -26,7 +27,11 @@ aws lambda update-function-code \
   --function-name $FUNCTION_NAME \
   --s3-bucket $S3_BUCKET \
   --s3-key $S3_KEY \
-  --s3-object-version $VERSION_ID
+  --s3-object-version $VERSION_ID \
+  --no-paginate
 
-aws lambda wait function-updated --function-name $FUNCTION_NAME
+aws lambda wait function-updated \
+  --function-name $FUNCTION_NAME \
+  --no-paginate
+
 echo "Deployed function successfully!"
