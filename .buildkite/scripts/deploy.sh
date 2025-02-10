@@ -2,6 +2,7 @@
 set -euo pipefail
 
 TERRAFORM_ROLE="arn:aws:iam::760097843905:role/platform-ci"
+export AWS_PAGER=""
 
 # Do this here rather than in Dockerfile so we don't install it on every build/test
 apt install -y awscli zip
@@ -16,6 +17,7 @@ cd $ROOT
 
 yarn package
 aws s3 cp $ROOT/package.zip "s3://${S3_BUCKET}/${S3_KEY}"
+
 VERSION_ID=$(aws s3api list-object-versions \
   --bucket $S3_BUCKET \
   --prefix $S3_KEY \
@@ -28,5 +30,7 @@ aws lambda update-function-code \
   --s3-key $S3_KEY \
   --s3-object-version $VERSION_ID
 
-aws lambda wait function-updated --function-name $FUNCTION_NAME
+aws lambda wait function-updated \
+  --function-name $FUNCTION_NAME 
+
 echo "Deployed function successfully!"
