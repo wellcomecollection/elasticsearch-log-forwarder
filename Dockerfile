@@ -7,7 +7,7 @@ RUN curl -L https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraf
     && echo "${TERRAFORM_SHA256} /tmp/terraform.zip" | sha256sum -c - \
     && unzip /tmp/terraform.zip -d /usr/local/bin
 
-RUN apt update && apt install -y git
+RUN apt update && apt install -y git less
 
 WORKDIR /app
 
