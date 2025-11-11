@@ -8,6 +8,14 @@ export const logEventToLogDocument =
   (event: CloudwatchLogEvent): LogDocument => ({
     id: event.id,
     "@timestamp": event.timestamp,
+    traceId: (() => {
+      const match = event.message.match(/"trace_id":\s*"([^"]+)"/);
+      return match ? match[1] : undefined;
+    })(),
+    logger: (() => {
+      const match = event.message.match(/"logger":\s*"([^"]+)"/);
+      return match ? match[1] : undefined;
+    })(),
     log: event.message,
     service,
   });
