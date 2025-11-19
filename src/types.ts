@@ -18,8 +18,6 @@ export type CloudwatchLogEvent = {
 export type LogDocument = {
   id: string;
   "@timestamp": number;
-  traceId?: string;
-  logger?: string;
   log: string;
   service: string;
 };
