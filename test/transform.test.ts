@@ -3,13 +3,27 @@ import { testLogEvent } from "./test-data";
 
 describe("transform", () => {
   it("transforms log events to log documents", () => {
-    const event = testLogEvent("Test message");
+    const message = `[INFO]\t2025-11-11T10:05:05.362Z\t0f48ac76-2de9-456a-ad88-572036f60957\t{"s3_file_uri": "s3://wellcomecollection-catalogue-graph/graph_bulk_loader/2025-10-02/windows/20251111T0945-20251111T1000/catalogue_works__nodes.csv", "transformer_type": "catalogue_works", "entity_type": "nodes", "event": "Starting bulk load", "level": "info", "logger": "bulk_loader", "timestamp": "2025-11-11T10:05:05.361985Z", "pipeline_step": "graph_bulk_loader", "trace_id": "logging test", "started_at": "2025-11-11T10:05:05.361219+00:00"}\n`;
+    const event = testLogEvent(message);
     const document = logEventToLogDocument("test-service")(event);
 
-    expect(document.log).toBe("Test message");
-    expect(document.service).toBe("test-service");
-    expect(document["@timestamp"]).toBe(event.timestamp);
-    expect(document.id).toBe(event.id);
+    expect(document).toStrictEqual({
+      id: event.id,
+      "@timestamp": event.timestamp,
+      log: '[INFO]\t2025-11-11T10:05:05.362Z\t0f48ac76-2de9-456a-ad88-572036f60957\t{"s3_file_uri": "s3://wellcomecollection-catalogue-graph/graph_bulk_loader/2025-10-02/windows/20251111T0945-20251111T1000/catalogue_works__nodes.csv", "transformer_type": "catalogue_works", "entity_type": "nodes", "event": "Starting bulk load", "level": "info", "logger": "bulk_loader", "timestamp": "2025-11-11T10:05:05.361985Z", "pipeline_step": "graph_bulk_loader", "trace_id": "logging test", "started_at": "2025-11-11T10:05:05.361219+00:00"}\n',
+      service: "test-service",
+      s3_file_uri:
+        "s3://wellcomecollection-catalogue-graph/graph_bulk_loader/2025-10-02/windows/20251111T0945-20251111T1000/catalogue_works__nodes.csv",
+      transformer_type: "catalogue_works",
+      entity_type: "nodes",
+      event: "Starting bulk load",
+      level: "info",
+      logger: "bulk_loader",
+      timestamp: "2025-11-11T10:05:05.361985Z",
+      pipeline_step: "graph_bulk_loader",
+      trace_id: "logging test",
+      started_at: "2025-11-11T10:05:05.361219+00:00",
+    });
   });
 
   it("correctly decodes data that is compressed and base64-encoded", async () => {
