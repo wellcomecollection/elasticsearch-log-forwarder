@@ -9,7 +9,7 @@ apt install -y awscli zip
 ROOT=$(git rev-parse --show-toplevel)
 
 cd $ROOT/terraform
-terraform init -backend-config="role_arn=${TERRAFORM_ROLE}"
+terraform init -backend-config="assume_role={role_arn=\"${TERRAFORM_ROLE}\"}"
 S3_BUCKET=$(terraform output -raw s3_bucket)
 S3_KEY=$(terraform output -raw s3_key)
 FUNCTION_NAME=$(terraform output -raw function_name)

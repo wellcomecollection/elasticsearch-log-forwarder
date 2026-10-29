@@ -46,6 +46,12 @@ export const createHandler =
           ...failedServices,
         ].join(", ")}`
       );
-      throw new Error(JSON.stringify(failures));
+      // Log and drop rather than throw: a throw retries the whole Kinesis batch, so one
+      // document Elasticsearch rejects would stall its shard until the record expires.
+      console.error(
+        `Dropped ${failures.length} documents: ${JSON.stringify(
+          failures.map(({ status, error }) => ({ status, error }))
+        )}`
+      );
     }
   };
