@@ -1,11 +1,9 @@
 steps:
-  - label: "autoformat"
+  - label: "format check"
     plugins:
       - docker-compose#v4.9.0:
           run: tooling
-          mount-ssh-agent: true
-          mount-buildkite-agent: true
-          command: [".buildkite/scripts/autoformat.sh"]
+          command: [".buildkite/scripts/format_check.sh"]
 
   - label: "test"
     plugins:
