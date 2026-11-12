@@ -1,0 +1,19 @@
+apiVersion: backplane/v1
+kind: System
+metadata:
+  name: elasticsearch-log-forwarder
+  description: Forwards logs from the shared Kinesis stream to the Elasticsearch logging cluster.
+spec:
+  owner: team:digital-platform
+  lifecycle: production
+---
+apiVersion: backplane/v1
+kind: Component
+metadata:
+  name: elasticsearch-log-forwarder
+  description: Lambda that forwards Kinesis log records to the Elasticsearch logging cluster.
+spec:
+  type: service
+  owner: team:digital-platform
+  lifecycle: production
+  system: system:elasticsearch-log-forwarder
