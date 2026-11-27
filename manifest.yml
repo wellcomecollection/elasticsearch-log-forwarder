@@ -17,3 +17,6 @@ spec:
   owner: team:digital-platform
   lifecycle: production
   system: system:elasticsearch-log-forwarder
+  dependsOn:
+    - ref: resource:logging-elasticsearch
+      description: Its only destination
